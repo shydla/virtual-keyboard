@@ -1,0 +1,15 @@
+.row {
+    margin: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+.key {
+    font-size: 2.5rem;
+    background-color: $color-key;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+.Space {
+    padding: 10px 160px;
+}
