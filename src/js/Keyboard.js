@@ -1,7 +1,11 @@
 export default class Keyboard {
-  static #getKey(value, lang) {
+  static #getKey(value, lang, keySymbol) {
+    let kbShift = 'up';
+    if (localStorage.getItem('kbShift')) {
+      kbShift = localStorage.getItem('kbShift');
+    }
     let kbCaps = 'up';
-    if (localStorage.getItem('caps')) {
+    if (localStorage.getItem('kbCaps')) {
       kbCaps = localStorage.getItem('kbCaps');
     }
     let currentLang = 'en';
@@ -10,6 +14,7 @@ export default class Keyboard {
     }
     const langStr = document.createElement('div');
     langStr.classList.add(lang);
+    // langStr.classList.add('symbol');
     if (lang !== currentLang) {
       langStr.classList.add('hidden');
     }
@@ -17,7 +22,13 @@ export default class Keyboard {
     for (let i = 0; i < 2; i += 1) {
       const strKey = document.createElement('span');
       strKey.classList.add(pos[i]);
-      if (kbCaps !== pos[i]) {
+
+      if (kbCaps !== pos[i] && value[i].startsWith('Key')) {
+        console.log(strKey);
+        strKey.classList.add('hidden');
+      }
+
+      if (kbShift !== pos[i]) {
         strKey.classList.add('hidden');
       }
       strKey.innerText = value[i];
@@ -42,9 +53,9 @@ export default class Keyboard {
         key.classList.add(keySymbol);
         const [enDown, enUp, ruDown, ruUp] = rowData[i][keySymbol];
 
-        key.appendChild(this.#getKey([enDown, enUp], 'en'));
+        key.appendChild(this.#getKey([enDown, enUp], 'en', keySymbol));
         // key.appendChild(this.#getKey(enUp, 'en', 'Up'));
-        key.appendChild(this.#getKey([ruDown, ruUp], 'ru'));
+        key.appendChild(this.#getKey([ruDown, ruUp], 'ru', keySymbol));
         // key.appendChild(this.#getKey(ruUp, 'ru', 'Up'));
       } else {
         key.classList.add(rowData[i]);
@@ -86,7 +97,12 @@ export default class Keyboard {
           case 'Space':
             value = ' ';
             break;
-
+          case 'CapsLock':
+            value = '⇪';
+            if (localStorage.getItem('kbCaps') === 'down') {
+              key.classList.add('active');
+            }
+            break;
           default:
             value = '';
         }
@@ -138,14 +154,14 @@ export default class Keyboard {
       'Del',
     ];
 
-    const twoLine = this.#getRow(rowData, 'one');
+    const twoLine = this.#getRow(rowData, 'two');
 
     return twoLine;
   }
 
   static getThreeRow() {
     const rowData = [
-      'CapsLook',
+      'CapsLock',
       { KeyA: ['a', 'A', 'ф', 'Ф'] },
       { KeyS: ['s', 'S', 'ы', 'Ы'] },
       { KeyD: ['d', 'D', 'в', 'В'] },
@@ -161,7 +177,7 @@ export default class Keyboard {
       'Enter',
     ];
 
-    const threeLine = this.#getRow(rowData, 'one');
+    const threeLine = this.#getRow(rowData, 'three');
 
     return threeLine;
   }
@@ -184,7 +200,7 @@ export default class Keyboard {
       'ShiftRight',
     ];
 
-    const fourLine = this.#getRow(rowData, 'one');
+    const fourLine = this.#getRow(rowData, 'four');
 
     return fourLine;
   }
@@ -202,7 +218,7 @@ export default class Keyboard {
       'ArrowRight',
     ];
 
-    const fiveLine = this.#getRow(rowData, 'one');
+    const fiveLine = this.#getRow(rowData, 'five');
 
     return fiveLine;
   }

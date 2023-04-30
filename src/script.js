@@ -45,3 +45,44 @@ paragraph2.innerText = 'Переключение раскладки Ctrl + Space
 description.appendChild(paragraph2);
 wrapper.appendChild(description);
 // ⌘ ⌥
+
+const shiftRendering = () => {
+  const kb = document.querySelector('.keyboard');
+
+  const oldOne = document.querySelector('.one');
+  kb.replaceChild(Keyboard.getOneRow(), oldOne);
+
+  const oldTwo = document.querySelector('.two');
+  kb.replaceChild(Keyboard.getTwoRow(), oldTwo);
+
+  const oldThree = document.querySelector('.three');
+  kb.replaceChild(Keyboard.getThreeRow(), oldThree);
+
+  const oldFour = document.querySelector('.four');
+  kb.replaceChild(Keyboard.getFourRow(), oldFour);
+};
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+    localStorage.setItem('kbShift', 'down');
+
+    shiftRendering();
+
+    const pressedKey = document.querySelector(`.${e.code}`);
+    pressedKey.classList.add('active');
+  } else {
+    const pressedKey = document.querySelector(`.${e.code}`);
+    pressedKey.classList.add('active');
+  }
+});
+document.addEventListener('keyup', (e) => {
+  const pressedKey = document.querySelector(`.${e.code}`);
+
+  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+    localStorage.setItem('kbShift', 'up');
+    pressedKey.classList.remove('active');
+    shiftRendering();
+  } else {
+    pressedKey.classList.remove('active');
+  }
+});
