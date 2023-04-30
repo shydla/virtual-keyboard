@@ -1,5 +1,5 @@
 export default class Keyboard {
-  static #getKey(value, lang, keySymbol) {
+  static #getKey(value, keySymbol) {
     let kbShift = 'up';
     if (localStorage.getItem('kbShift')) {
       kbShift = localStorage.getItem('kbShift');
@@ -8,33 +8,24 @@ export default class Keyboard {
     if (localStorage.getItem('kbCaps')) {
       kbCaps = localStorage.getItem('kbCaps');
     }
-    let currentLang = 'en';
-    if (localStorage.getItem('kbLang')) {
-      currentLang = localStorage.getItem('kbLang');
-    }
-    const langStr = document.createElement('div');
-    langStr.classList.add(lang);
-    // langStr.classList.add('symbol');
-    if (lang !== currentLang) {
-      langStr.classList.add('hidden');
-    }
-    const pos = ['up', 'down'];
-    for (let i = 0; i < 2; i += 1) {
-      const strKey = document.createElement('span');
-      strKey.classList.add(pos[i]);
 
-      if (kbCaps !== pos[i] && value[i].startsWith('Key')) {
-        console.log(strKey);
-        strKey.classList.add('hidden');
-      }
 
-      if (kbShift !== pos[i]) {
-        strKey.classList.add('hidden');
+    const strKey = document.createElement('span');
+
+    let i = 0;
+
+    if (kbCaps === 'down') {
+      if (keySymbol.startsWith('Key')) {
+        i += 1;
       }
-      strKey.innerText = value[i];
-      langStr.appendChild(strKey);
     }
-    return langStr;
+    if (kbShift === 'down') {
+      i += 1;
+    }
+    strKey.innerText = value[i];
+ 
+
+    return strKey;
   }
 
   static #getRow(rowData, line) {
@@ -52,10 +43,16 @@ export default class Keyboard {
         const [keySymbol] = res;
         key.classList.add(keySymbol);
         const [enDown, enUp, ruDown, ruUp] = rowData[i][keySymbol];
-
-        key.appendChild(this.#getKey([enDown, enUp], 'en', keySymbol));
-        // key.appendChild(this.#getKey(enUp, 'en', 'Up'));
-        key.appendChild(this.#getKey([ruDown, ruUp], 'ru', keySymbol));
+        let currentLang = 'en';
+        if (localStorage.getItem('kbLang')) {
+          currentLang = localStorage.getItem('kbLang');
+        }
+        if (currentLang === 'en') {
+          key.appendChild(this.#getKey([enDown, enUp], keySymbol));
+        } else {
+          // key.appendChild(this.#getKey(enUp, 'en', 'Up'));
+          key.appendChild(this.#getKey([ruDown, ruUp], keySymbol));
+        }
         // key.appendChild(this.#getKey(ruUp, 'ru', 'Up'));
       } else {
         key.classList.add(rowData[i]);

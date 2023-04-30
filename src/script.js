@@ -70,19 +70,33 @@ document.addEventListener('keydown', (e) => {
 
     const pressedKey = document.querySelector(`.${e.code}`);
     pressedKey.classList.add('active');
+  } else if (e.code === 'CapsLock') {
+    localStorage.setItem('kbCaps', 'down');
+
+    shiftRendering();
+
+    const pressedKey = document.querySelector(`.${e.code}`);
+    pressedKey.classList.add('active');
   } else {
     const pressedKey = document.querySelector(`.${e.code}`);
     pressedKey.classList.add('active');
   }
 });
 document.addEventListener('keyup', (e) => {
-  const pressedKey = document.querySelector(`.${e.code}`);
-
   if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+    const pressedKey = document.querySelector(`.${e.code}`);
     localStorage.setItem('kbShift', 'up');
     pressedKey.classList.remove('active');
     shiftRendering();
+  } else if (e.code === 'CapsLock') {
+    localStorage.setItem('kbCaps', 'up');
+
+    shiftRendering();
+
+    const pressedKey = document.querySelector(`.${e.code}`);
+    pressedKey.classList.remove('active');
   } else {
+    const pressedKey = document.querySelector(`.${e.code}`);
     pressedKey.classList.remove('active');
   }
 });
