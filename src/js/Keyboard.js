@@ -41,6 +41,7 @@ export default class Keyboard {
 
         const [keySymbol] = res;
         key.classList.add(keySymbol);
+        key.id = keySymbol;
         const [enDown, enUp, ruDown, ruUp] = rowData[i][keySymbol];
         let currentLang = 'en';
         if (localStorage.getItem('kbLang')) {
@@ -60,13 +61,20 @@ export default class Keyboard {
         // key.appendChild(this.#getKey(ruUp, 'ru', 'Up'));
       } else {
         key.classList.add(rowData[i]);
+        key.id = rowData[i];
         key.classList.add('unselectable');
         let value;
         switch (rowData[i]) {
           case 'ShiftLeft':
+            if (localStorage.getItem('kbShift') === 'down') {
+              key.classList.add('active');
+            }
             value = '⇧   ';
             break;
           case 'ShiftRight':
+            if (localStorage.getItem('kbShift') === 'down') {
+              key.classList.add('active');
+            }
             value = '     ⇧';
             break;
           case 'ControlLeft':
@@ -153,7 +161,6 @@ export default class Keyboard {
       { KeyO: ['p', 'P', 'з', 'З'] },
       { BracketLeft: ['[', '{', 'х', 'Х'] },
       { BracketRight: [']', '}', 'ъ', 'Ъ'] },
-      'Del',
     ];
 
     const twoLine = this.#getRow(rowData, 'two');

@@ -2,6 +2,8 @@ import './scss/style.scss';
 import './assets/favicon.ico';
 import Keyboard from './js/Keyboard';
 
+// TODO REFACTOR!!!
+
 const wrapper = document.createElement('main');
 wrapper.classList.add('wrapper');
 
@@ -50,6 +52,9 @@ wrapper.appendChild(description);
 
 const textarea = document.querySelector('.textarea');
 textarea.focus();
+localStorage.setItem('kbAlt', 'up');
+localStorage.setItem('kbCtrl', 'up');
+document.querySelector('.ArrowLeft').addEventListener('mousedown', () => false);
 // ⌘ ⌥
 const backspace = () => {
   let start = textarea.selectionStart;
@@ -65,15 +70,20 @@ const backspace = () => {
 const horizontalArrow = (direction) => {
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
+  // console.log(start);
+  // console.log(end);
   if (direction === 'ArrowLeft') {
     if (start !== end) {
       textarea.selectionEnd = start;
+      textarea.selectionStart = start;
     } else {
-      textarea.selectionStart = start > 0 ? start - 1 : start;
-      textarea.selectionEnd = start > 0 ? start - 1 : start;
+      const position = start > 0 ? start - 1 : start;
+      textarea.selectionStart = position;
+      textarea.selectionEnd = position;
     }
   }
   if (direction === 'ArrowRight') {
+    // console.log('ss');
     if (start !== end) {
       textarea.selectionStart = end;
     } else {
@@ -180,25 +190,25 @@ const shiftRendering = () => {
 const allKeyDown = (event) => {
   let pressedKey = document.querySelector(`.${event.code}`);
   pressedKey.classList.add('active');
-  event.preventDefault();
+  // event.preventDefault();
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    event.preventDefault();
+    // event.preventDefault();
     localStorage.setItem('kbShift', 'down');
     shiftRendering();
     pressedKey = document.querySelector(`.${event.code}`);
     pressedKey.classList.add('active');
   } else if (event.code === 'CapsLock') {
-    event.preventDefault();
+    // event.preventDefault();
     localStorage.setItem('kbCaps', 'down');
 
     shiftRendering();
   } else if (event.code === 'ControlLeft') {
-    event.preventDefault();
+    // event.preventDefault();
   } else if (event.code === 'Backspace') {
     event.preventDefault();
     backspace();
   } else if (event.code === 'AltLeft') {
-    event.preventDefault();
+    // event.preventDefault();
   } else if (event.code === 'ArrowLeft' || event.code === 'ArrowRight') {
     event.preventDefault();
     horizontalArrow(event.code);
@@ -222,17 +232,74 @@ const allKeyUp = (event) => {
     localStorage.setItem('kbCaps', 'up');
 
     shiftRendering();
-  } else if (event.code === 'AltLeft' && event.ctrlKey || event.code === 'ControlLeft' && event.altKey) {
-    event.preventDefault();
+  } else if ((event.code === 'AltLeft' && event.ctrlKey) || (event.code === 'ControlLeft' && event.altKey)) {
+    // event.preventDefault();
     localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
     shiftRendering();
   } else if (event.code === 'ControlLeft') {
-    event.preventDefault();
+    // event.preventDefault();
   }
 };
 document.addEventListener('keydown', allKeyDown);
 document.addEventListener('keyup', allKeyUp);
 window.addEventListener('click', (e) => {
   textarea.focus();
-  console.log(e.target);
+  if (e.target.closest('.key')) {
+    if (e.target.closest('.key').id === 'CapsLock' && localStorage.getItem('kbCaps') === 'up') {
+      allKeyDown({ code: 'CapsLock' });
+      // localStorage.setItem('kbCaps', 'down');
+    } else {
+      allKeyUp({ code: 'CapsLock' });
+      // localStorage.setItem('kbCaps', 'up');
+    }
+    if (e.target.closest('.key').id === 'ShiftLeft') {
+      if (localStorage.getItem('kbShift') === 'up') {
+        allKeyDown({ code: 'ShiftLeft' });
+      } else {
+        allKeyUp({ code: 'ShiftLeft' });
+      }
+    }
+    if (e.target.closest('.key').id === 'ShiftRight') {
+      if (localStorage.getItem('kbShift') === 'up') {
+        allKeyDown({ code: 'ShiftRight' });
+      } else {
+        allKeyUp({ code: 'ShiftRight' });
+      }
+    }
+    if (e.target.closest('.key').id === 'Backspace') {
+      backspace();
+    }
+    if (e.target.closest('.key').id === 'ControlLeft') {
+      if (!localStorage.getItem('kbCtrl')) {
+        localStorage.setItem('kbCtrl', 'up');
+      }
+      if (localStorage.getItem('kbCtrl') === 'up') {
+        allKeyDown({ code: 'ControlLeft' });
+        localStorage.setItem('kbCtrl', 'down');
+      } else {
+        allKeyUp({ code: 'ControlLeft' });
+        localStorage.setItem('kbCtrl', 'up');
+      }
+    }
+    if (e.target.closest('.key').id === 'AltLeft') {
+      // if (!localStorage.getItem('kbAlt')) {
+      //   localStorage.setItem('kbAlt', 'up');
+      // }
+      // if (localStorage.getItem('kbAlt') === 'up') {
+      //   allKeyDown({ code: 'AltLeft' });
+      //   // localStorage.setItem('kbAlt', 'down');
+      // } else {
+      const ctrl = localStorage.getItem('kbCtrl') === 'down';
+      allKeyUp({ code: 'AltLeft', ctrlKey: ctrl });
+      // localStorage.setItem('kbAlt', 'up');
+      // }
+    }
+
+    if (e.target.closest('.key').id === 'ArrowLeft' || e.target.closest('.key').id === 'ArrowRight') {
+      console.log(e.target.closest('.key').id);
+      horizontalArrow(e.target.closest('.key').id);
+    }
+    printSymbol(e.target.closest('.key').id);
+    textarea.focus();
+  }
 });
