@@ -298,7 +298,7 @@ window.addEventListener('click', (e) => {
     }
 
     if (e.target.closest('.key').id === 'ArrowLeft' || e.target.closest('.key').id === 'ArrowRight') {
-      console.log(e.target.closest('.key').id);
+      // console.log(e.target.closest('.key').id);
       horizontalArrow(e.target.closest('.key').id);
     }
     printSymbol(e.target.closest('.key').id);
