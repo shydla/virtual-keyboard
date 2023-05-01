@@ -128,7 +128,7 @@ const verticalArrow = (direction) => {
     for (let i = 0; i <= row - 1; i += 1) {
       newPos += tmp[i].length;
     }
-    if (row -1 < tmp.length - 1) {
+    if (row - 1 < tmp.length - 1) {
       if (tmp[row - 1].length < posInRow) {
         newPos += (tmp[row].length - 1);
       } else {
@@ -222,7 +222,7 @@ const allKeyUp = (event) => {
     localStorage.setItem('kbCaps', 'up');
 
     shiftRendering();
-  } else if (event.code === 'AltLeft' && event.ctrlKey) {
+  } else if (event.code === 'AltLeft' && event.ctrlKey || event.code === 'ControlLeft' && event.altKey) {
     event.preventDefault();
     localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
     shiftRendering();
@@ -232,4 +232,7 @@ const allKeyUp = (event) => {
 };
 document.addEventListener('keydown', allKeyDown);
 document.addEventListener('keyup', allKeyUp);
-window.addEventListener('click', () => textarea.focus());
+window.addEventListener('click', (e) => {
+  textarea.focus();
+  console.log(e.target);
+});

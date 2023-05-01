@@ -10,6 +10,7 @@ export default class Keyboard {
     }
 
     const strKey = document.createElement('span');
+    strKey.classList.add('unselectable');
 
     let i = 0;
 
@@ -59,6 +60,7 @@ export default class Keyboard {
         // key.appendChild(this.#getKey(ruUp, 'ru', 'Up'));
       } else {
         key.classList.add(rowData[i]);
+        key.classList.add('unselectable');
         let value;
         switch (rowData[i]) {
           case 'ShiftLeft':

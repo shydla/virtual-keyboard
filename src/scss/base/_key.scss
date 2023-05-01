@@ -53,3 +53,6 @@
 .key-spec {
     background-color: $color-key;
 }
+.unselectable {
+  user-select: none;
+}
