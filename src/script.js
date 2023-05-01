@@ -128,18 +128,16 @@ const verticalArrow = (direction) => {
     for (let i = 0; i <= row - 1; i += 1) {
       newPos += tmp[i].length;
     }
-    console.log(newPos);
-    // if (row >= 2) {
-    if (tmp[row - 1].length < posInRow) {
-      newPos += (tmp[row].length - 1);
-    } else {
-      newPos += posInRow;
-    }
-    // console.log(posInRow);
+    if (row -1 < tmp.length - 1) {
+      if (tmp[row - 1].length < posInRow) {
+        newPos += (tmp[row].length - 1);
+      } else {
+        newPos += posInRow;
+      }
 
-    textarea.selectionEnd = newPos;
-    textarea.selectionStart = newPos;
-    // }
+      textarea.selectionEnd = newPos;
+      textarea.selectionStart = newPos;
+    }
   }
 };
 const printSymbol = (element) => {
@@ -180,12 +178,15 @@ const shiftRendering = () => {
 };
 // TODO clean     event.preventDefault();
 const allKeyDown = (event) => {
+  let pressedKey = document.querySelector(`.${event.code}`);
+  pressedKey.classList.add('active');
   event.preventDefault();
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
     event.preventDefault();
     localStorage.setItem('kbShift', 'down');
-
     shiftRendering();
+    pressedKey = document.querySelector(`.${event.code}`);
+    pressedKey.classList.add('active');
   } else if (event.code === 'CapsLock') {
     event.preventDefault();
     localStorage.setItem('kbCaps', 'down');
@@ -205,16 +206,18 @@ const allKeyDown = (event) => {
     event.preventDefault();
     verticalArrow(event.code);
   } else {
-    const pressedKey = document.querySelector(`.${event.code}`);
-    pressedKey.classList.add('active');
     // console.log(event);
     printSymbol(event.code);
   }
 };
 const allKeyUp = (event) => {
+  let pressedKey = document.querySelector(`.${event.code}`);
+  pressedKey.classList.remove('active');
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
     localStorage.setItem('kbShift', 'up');
     shiftRendering();
+    pressedKey = document.querySelector(`.${event.code}`);
+    pressedKey.classList.remove('active');
   } else if (event.code === 'CapsLock') {
     localStorage.setItem('kbCaps', 'up');
 
@@ -225,9 +228,6 @@ const allKeyUp = (event) => {
     shiftRendering();
   } else if (event.code === 'ControlLeft') {
     event.preventDefault();
-  } else {
-    const pressedKey = document.querySelector(`.${event.code}`);
-    pressedKey.classList.remove('active');
   }
 };
 document.addEventListener('keydown', allKeyDown);
