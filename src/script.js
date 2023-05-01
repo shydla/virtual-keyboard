@@ -156,6 +156,8 @@ const printSymbol = (element) => {
     value = '   ';
   } else if (element === 'Enter') {
     value = '\n';
+  } else if (element === 'Space') {
+    value = ' ';
   } else {
     value = document.querySelector(`.${element}`).firstChild.innerText;
     // console.log(`.${element}`);
