@@ -98,15 +98,49 @@ const verticalArrow = (direction) => {
   if (arr[arr.length - 1] !== '\n') {
     tmp.push(arrTmp);
   }
-  let count;
-  let i = 0;
+  let count = 0;
+  let row = 0;
   while (count < textarea.selectionEnd) {
-    count += tmp[i].length;
-    i += 1;
+    count += tmp[row].length;
+    row += 1;
   }
-  console.log(tmp);
-  console.log(i);
-  console.log(direction);
+  let posInRow = textarea.selectionEnd;
+  for (let i = 0; i < row - 1; i += 1) {
+    posInRow -= tmp[i].length;
+  }
+  let newPos = 0;
+  if (direction === 'ArrowUp') {
+    for (let i = 0; i < row - 2; i += 1) {
+      newPos += tmp[i].length;
+    }
+    if (row >= 2) {
+      if (tmp[row - 2].length < posInRow) {
+        newPos += (tmp[row - 2].length - 1);
+      } else {
+        newPos += posInRow;
+      }
+      // console.log(posInRow);
+
+      textarea.selectionEnd = newPos;
+      textarea.selectionStart = newPos;
+    }
+  } else {
+    for (let i = 0; i <= row - 1; i += 1) {
+      newPos += tmp[i].length;
+    }
+    console.log(newPos);
+    // if (row >= 2) {
+    if (tmp[row - 1].length < posInRow) {
+      newPos += (tmp[row].length - 1);
+    } else {
+      newPos += posInRow;
+    }
+    // console.log(posInRow);
+
+    textarea.selectionEnd = newPos;
+    textarea.selectionStart = newPos;
+    // }
+  }
 };
 const printSymbol = (element) => {
   let value;
@@ -173,7 +207,7 @@ const allKeyDown = (event) => {
   } else {
     const pressedKey = document.querySelector(`.${event.code}`);
     pressedKey.classList.add('active');
-    console.log(event);
+    // console.log(event);
     printSymbol(event.code);
   }
 };
