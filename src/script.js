@@ -13,6 +13,8 @@ wrapper.appendChild(h1);
 
 const textArea = document.createElement('textarea');
 textArea.classList.add('textarea');
+textArea.cols = 7;
+textArea.rows = 56;
 wrapper.appendChild(textArea);
 
 const keyboard = document.createElement('div');
@@ -44,7 +46,29 @@ description.appendChild(paragraph);
 paragraph2.innerText = 'Переключение раскладки LeftCtrl + LeftAlt';
 description.appendChild(paragraph2);
 wrapper.appendChild(description);
+
+const textarea = document.querySelector('.textarea');
+textarea.focus();
 // ⌘ ⌥
+
+const printSymbol = (element) => {
+  let value;
+  if (element === 'Tab') {
+    value = '   ';
+  } else if (element === 'Enter') {
+    value = '\n';
+  } else {
+    value = element;
+  }
+  const end = textarea.selectionEnd;
+  const valueArr = textarea.value.split('');
+
+  const firstPart = valueArr.slice(0, textarea.selectionEnd);
+  firstPart.push(value);
+  const secondPart = valueArr.slice(textarea.selectionEnd);
+  textarea.value = firstPart.join('') + secondPart.join('');
+  textarea.selectionEnd = end + 1;
+};
 
 const shiftRendering = () => {
   const kb = document.querySelector('.keyboard');
@@ -61,8 +85,9 @@ const shiftRendering = () => {
   const oldFour = document.querySelector('.four');
   kb.replaceChild(Keyboard.getFourRow(), oldFour);
 };
-
+// TODO clean     event.preventDefault();
 const allKeyDown = (event) => {
+  event.preventDefault();
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
     event.preventDefault();
     localStorage.setItem('kbShift', 'down');
@@ -80,7 +105,8 @@ const allKeyDown = (event) => {
   }
   const pressedKey = document.querySelector(`.${event.code}`);
   pressedKey.classList.add('active');
-  //   console.log(event);
+//   console.log(event);
+  printSymbol(event.key);
 };
 const allKeyUp = (event) => {
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
@@ -105,3 +131,4 @@ const allKeyUp = (event) => {
 };
 document.addEventListener('keydown', allKeyDown);
 document.addEventListener('keyup', allKeyUp);
+window.addEventListener('click', () => textarea.focus());
