@@ -58,15 +58,9 @@ const backspace = () => {
     start -= 1;
   }
   const valueArr = textarea.value.split('');
-  console.log('start', start);
-  console.log('end', end);
   const firstPart = valueArr.slice(0, start);
   const secondPart = valueArr.slice(end);
-  console.log('first', firstPart);
-  console.log('second', secondPart);
   textarea.value = firstPart.join('') + secondPart.join('');
-  console.log('ns', textarea.selectionStart);
-  console.log('ne', textarea.selectionEnd);
 };
 const horizontalArrow = (direction) => {
   const start = textarea.selectionStart;
@@ -78,8 +72,8 @@ const horizontalArrow = (direction) => {
       textarea.selectionStart = start > 0 ? start - 1 : start;
       textarea.selectionEnd = start > 0 ? start - 1 : start;
     }
-  } 
-  if (direction === 'ArrowRight') { {
+  }
+  if (direction === 'ArrowRight') {
     if (start !== end) {
       textarea.selectionStart = end;
     } else {
@@ -88,6 +82,32 @@ const horizontalArrow = (direction) => {
     }
   }
 };
+const verticalArrow = (direction) => {
+  let arrTmp = [];
+  const tmp = [];
+  const arr = textarea.value.split('');
+  arr.forEach((e) => {
+    if (e !== '\n') {
+      arrTmp.push(e);
+    } else {
+      arrTmp.push('\n');
+      tmp.push(arrTmp);
+      arrTmp = [];
+    }
+  });
+  if (arr[arr.length - 1] !== '\n') {
+    tmp.push(arrTmp);
+  }
+  let count;
+  let i = 0;
+  while (count < textarea.selectionEnd) {
+    count += tmp[i].length;
+    i += 1;
+  }
+  console.log(tmp);
+  console.log(i);
+  console.log(direction);
+};
 const printSymbol = (element) => {
   let value;
   if (element === 'Tab') {
@@ -95,7 +115,9 @@ const printSymbol = (element) => {
   } else if (element === 'Enter') {
     value = '\n';
   } else {
-    value = element;
+    value = document.querySelector(`.${element}`).firstChild.innerText;
+    // console.log(`.${element}`);
+    // console.log(document.querySelector(`.${element}`).firstChild.innerText);
   }
   const end = textarea.selectionEnd;
   const valueArr = textarea.value.split('');
@@ -138,14 +160,21 @@ const allKeyDown = (event) => {
   } else if (event.code === 'ControlLeft') {
     event.preventDefault();
   } else if (event.code === 'Backspace') {
+    event.preventDefault();
     backspace();
+  } else if (event.code === 'AltLeft') {
+    event.preventDefault();
   } else if (event.code === 'ArrowLeft' || event.code === 'ArrowRight') {
+    event.preventDefault();
     horizontalArrow(event.code);
+  } else if (event.code === 'ArrowUp' || event.code === 'ArrowDown') {
+    event.preventDefault();
+    verticalArrow(event.code);
   } else {
     const pressedKey = document.querySelector(`.${event.code}`);
     pressedKey.classList.add('active');
-    //   console.log(event);
-    printSymbol(event.key);
+    console.log(event);
+    printSymbol(event.code);
   }
 };
 const allKeyUp = (event) => {
