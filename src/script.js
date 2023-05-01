@@ -41,7 +41,7 @@ const paragraph2 = document.createElement('p');
 paragraph2.classList.add('p');
 paragraph.innerText = 'Клавиатура создана в MacOS';
 description.appendChild(paragraph);
-paragraph2.innerText = 'Переключение раскладки Ctrl + Space';
+paragraph2.innerText = 'Переключение раскладки LeftCtrl + LeftAlt';
 description.appendChild(paragraph2);
 wrapper.appendChild(description);
 // ⌘ ⌥
@@ -62,41 +62,52 @@ const shiftRendering = () => {
   kb.replaceChild(Keyboard.getFourRow(), oldFour);
 };
 
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+function allKeyDown(event) {
+  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+    event.preventDefault();
     localStorage.setItem('kbShift', 'down');
 
     shiftRendering();
 
-    const pressedKey = document.querySelector(`.${e.code}`);
-    pressedKey.classList.add('active');
-  } else if (e.code === 'CapsLock') {
+    // const pressedKey = document.querySelector(`.${event.code}`);
+    // pressedKey.classList.add('active');
+  }
+  if (event.code === 'CapsLock') {
+    event.preventDefault();
     localStorage.setItem('kbCaps', 'down');
 
     shiftRendering();
 
-    const pressedKey = document.querySelector(`.${e.code}`);
-    pressedKey.classList.add('active');
-  } else {
-    const pressedKey = document.querySelector(`.${e.code}`);
-    pressedKey.classList.add('active');
+    // const pressedKey = document.querySelector(`.${event.code}`);
+    // pressedKey.classList.add('active');
   }
-});
+  if (event.code === 'ControlLeft') {
+    event.preventDefault();
+  }
+  const pressedKey = document.querySelector(`.${event.code}`);
+  pressedKey.classList.add('active');
+//   console.log(event);
+}
+
+document.addEventListener('keydown', allKeyDown);
 document.addEventListener('keyup', (e) => {
   if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-    const pressedKey = document.querySelector(`.${e.code}`);
     localStorage.setItem('kbShift', 'up');
-    pressedKey.classList.remove('active');
     shiftRendering();
-  } else if (e.code === 'CapsLock') {
+  }
+  if (e.code === 'CapsLock') {
     localStorage.setItem('kbCaps', 'up');
 
     shiftRendering();
-
-    const pressedKey = document.querySelector(`.${e.code}`);
-    pressedKey.classList.remove('active');
-  } else {
-    const pressedKey = document.querySelector(`.${e.code}`);
-    pressedKey.classList.remove('active');
   }
+  if (e.code === 'AltLeft' && e.ctrlKey) {
+    e.preventDefault();
+    localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
+    shiftRendering();
+  }
+  if (e.code === 'ControlLeft') {
+    e.preventDefault();
+  }
+  const pressedKey = document.querySelector(`.${e.code}`);
+  pressedKey.classList.remove('active');
 });

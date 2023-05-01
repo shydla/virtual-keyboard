@@ -9,7 +9,6 @@ export default class Keyboard {
       kbCaps = localStorage.getItem('kbCaps');
     }
 
-
     const strKey = document.createElement('span');
 
     let i = 0;
@@ -23,7 +22,6 @@ export default class Keyboard {
       i += 1;
     }
     strKey.innerText = value[i];
- 
 
     return strKey;
   }
@@ -46,12 +44,17 @@ export default class Keyboard {
         let currentLang = 'en';
         if (localStorage.getItem('kbLang')) {
           currentLang = localStorage.getItem('kbLang');
+        } else {
+          localStorage.setItem('kbLang', 'en');
         }
         if (currentLang === 'en') {
           key.appendChild(this.#getKey([enDown, enUp], keySymbol));
         } else {
           // key.appendChild(this.#getKey(enUp, 'en', 'Up'));
           key.appendChild(this.#getKey([ruDown, ruUp], keySymbol));
+        }
+        if (keySymbol.startsWith('Key') || keySymbol.startsWith('Dig') || keySymbol === 'BracketLeft' || keySymbol === 'BracketRight' || keySymbol === 'Semicolon' || keySymbol === 'Quote' || keySymbol === 'Backslash' || keySymbol === 'Comma' || keySymbol === 'Period' || keySymbol === 'Slash' || keySymbol === 'IntlBackslash') {
+          key.classList.add('key-spec');
         }
         // key.appendChild(this.#getKey(ruUp, 'ru', 'Up'));
       } else {

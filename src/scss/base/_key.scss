@@ -12,7 +12,8 @@
   height: 55px;
   text-align: center;
   font-size: 2.5rem;
-  background-color: $color-key;
+  background-color: $color-key-spec;
+
   //   padding: 10px 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -27,6 +28,7 @@
 .Space {
   width: 450px;
 }
+
 .CapsLock {
   padding-right: 50px;
 }
@@ -47,4 +49,7 @@
 }
 .Enter {
     width: 100px;
+}
+.key-spec {
+    background-color: $color-key;
 }
