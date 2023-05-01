@@ -15,6 +15,7 @@ const textArea = document.createElement('textarea');
 textArea.classList.add('textarea');
 textArea.cols = 7;
 textArea.rows = 56;
+textArea.spellcheck = false;
 wrapper.appendChild(textArea);
 
 const keyboard = document.createElement('div');
@@ -67,6 +68,26 @@ const backspace = () => {
   console.log('ns', textarea.selectionStart);
   console.log('ne', textarea.selectionEnd);
 };
+const horizontalArrow = (direction) => {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  if (direction === 'ArrowLeft') {
+    if (start !== end) {
+      textarea.selectionEnd = start;
+    } else {
+      textarea.selectionStart = start > 0 ? start - 1 : start;
+      textarea.selectionEnd = start > 0 ? start - 1 : start;
+    }
+  } 
+  if (direction === 'ArrowRight') { {
+    if (start !== end) {
+      textarea.selectionStart = end;
+    } else {
+      textarea.selectionStart = start > 0 ? start + 1 : start;
+      textarea.selectionEnd = start > 0 ? start + 1 : start;
+    }
+  }
+};
 const printSymbol = (element) => {
   let value;
   if (element === 'Tab') {
@@ -118,6 +139,8 @@ const allKeyDown = (event) => {
     event.preventDefault();
   } else if (event.code === 'Backspace') {
     backspace();
+  } else if (event.code === 'ArrowLeft' || event.code === 'ArrowRight') {
+    horizontalArrow(event.code);
   } else {
     const pressedKey = document.querySelector(`.${event.code}`);
     pressedKey.classList.add('active');
