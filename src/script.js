@@ -50,7 +50,23 @@ wrapper.appendChild(description);
 const textarea = document.querySelector('.textarea');
 textarea.focus();
 // ⌘ ⌥
-
+const backspace = () => {
+  let start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  if (start === end) {
+    start -= 1;
+  }
+  const valueArr = textarea.value.split('');
+  console.log('start', start);
+  console.log('end', end);
+  const firstPart = valueArr.slice(0, start);
+  const secondPart = valueArr.slice(end);
+  console.log('first', firstPart);
+  console.log('second', secondPart);
+  textarea.value = firstPart.join('') + secondPart.join('');
+  console.log('ns', textarea.selectionStart);
+  console.log('ne', textarea.selectionEnd);
+};
 const printSymbol = (element) => {
   let value;
   if (element === 'Tab') {
@@ -93,41 +109,40 @@ const allKeyDown = (event) => {
     localStorage.setItem('kbShift', 'down');
 
     shiftRendering();
-  }
-  if (event.code === 'CapsLock') {
+  } else if (event.code === 'CapsLock') {
     event.preventDefault();
     localStorage.setItem('kbCaps', 'down');
 
     shiftRendering();
-  }
-  if (event.code === 'ControlLeft') {
+  } else if (event.code === 'ControlLeft') {
     event.preventDefault();
+  } else if (event.code === 'Backspace') {
+    backspace();
+  } else {
+    const pressedKey = document.querySelector(`.${event.code}`);
+    pressedKey.classList.add('active');
+    //   console.log(event);
+    printSymbol(event.key);
   }
-  const pressedKey = document.querySelector(`.${event.code}`);
-  pressedKey.classList.add('active');
-//   console.log(event);
-  printSymbol(event.key);
 };
 const allKeyUp = (event) => {
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
     localStorage.setItem('kbShift', 'up');
     shiftRendering();
-  }
-  if (event.code === 'CapsLock') {
+  } else if (event.code === 'CapsLock') {
     localStorage.setItem('kbCaps', 'up');
 
     shiftRendering();
-  }
-  if (event.code === 'AltLeft' && event.ctrlKey) {
+  } else if (event.code === 'AltLeft' && event.ctrlKey) {
     event.preventDefault();
     localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
     shiftRendering();
-  }
-  if (event.code === 'ControlLeft') {
+  } else if (event.code === 'ControlLeft') {
     event.preventDefault();
+  } else {
+    const pressedKey = document.querySelector(`.${event.code}`);
+    pressedKey.classList.remove('active');
   }
-  const pressedKey = document.querySelector(`.${event.code}`);
-  pressedKey.classList.remove('active');
 };
 document.addEventListener('keydown', allKeyDown);
 document.addEventListener('keyup', allKeyUp);
