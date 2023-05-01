@@ -62,52 +62,46 @@ const shiftRendering = () => {
   kb.replaceChild(Keyboard.getFourRow(), oldFour);
 };
 
-function allKeyDown(event) {
+const allKeyDown = (event) => {
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
     event.preventDefault();
     localStorage.setItem('kbShift', 'down');
 
     shiftRendering();
-
-    // const pressedKey = document.querySelector(`.${event.code}`);
-    // pressedKey.classList.add('active');
   }
   if (event.code === 'CapsLock') {
     event.preventDefault();
     localStorage.setItem('kbCaps', 'down');
 
     shiftRendering();
-
-    // const pressedKey = document.querySelector(`.${event.code}`);
-    // pressedKey.classList.add('active');
   }
   if (event.code === 'ControlLeft') {
     event.preventDefault();
   }
   const pressedKey = document.querySelector(`.${event.code}`);
   pressedKey.classList.add('active');
-//   console.log(event);
-}
-
-document.addEventListener('keydown', allKeyDown);
-document.addEventListener('keyup', (e) => {
-  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+  //   console.log(event);
+};
+const allKeyUp = (event) => {
+  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
     localStorage.setItem('kbShift', 'up');
     shiftRendering();
   }
-  if (e.code === 'CapsLock') {
+  if (event.code === 'CapsLock') {
     localStorage.setItem('kbCaps', 'up');
 
     shiftRendering();
   }
-  if (e.code === 'AltLeft' && e.ctrlKey) {
-    e.preventDefault();
+  if (event.code === 'AltLeft' && event.ctrlKey) {
+    event.preventDefault();
     localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
     shiftRendering();
   }
-  if (e.code === 'ControlLeft') {
-    e.preventDefault();
+  if (event.code === 'ControlLeft') {
+    event.preventDefault();
   }
-  const pressedKey = document.querySelector(`.${e.code}`);
+  const pressedKey = document.querySelector(`.${event.code}`);
   pressedKey.classList.remove('active');
-});
+};
+document.addEventListener('keydown', allKeyDown);
+document.addEventListener('keyup', allKeyUp);
