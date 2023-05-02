@@ -191,55 +191,60 @@ const shiftRendering = () => {
 // TODO clean     event.preventDefault();
 const allKeyDown = (event) => {
   let pressedKey = document.querySelector(`.${event.code}`);
-  pressedKey.classList.add('active');
-  // event.preventDefault();
-  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    // event.preventDefault();
-    localStorage.setItem('kbShift', 'down');
-    shiftRendering();
-    pressedKey = document.querySelector(`.${event.code}`);
-    pressedKey.classList.add('active');
-  } else if (event.code === 'CapsLock') {
-    // event.preventDefault();
-    localStorage.setItem('kbCaps', 'down');
 
-    shiftRendering();
-  } else if (event.code === 'ControlLeft') {
+  if (pressedKey) {
+    pressedKey.classList.add('active');
     // event.preventDefault();
-  } else if (event.code === 'Backspace') {
-    event.preventDefault();
-    backspace();
-  } else if (event.code === 'AltLeft') {
-    // event.preventDefault();
-  } else if (event.code === 'ArrowLeft' || event.code === 'ArrowRight') {
-    event.preventDefault();
-    horizontalArrow(event.code);
-  } else if (event.code === 'ArrowUp' || event.code === 'ArrowDown') {
-    event.preventDefault();
-    verticalArrow(event.code);
-  } else {
-    // console.log(event);
-    printSymbol(event.code);
+    if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+      // event.preventDefault();
+      localStorage.setItem('kbShift', 'down');
+      shiftRendering();
+      pressedKey = document.querySelector(`.${event.code}`);
+      pressedKey.classList.add('active');
+    } else if (event.code === 'CapsLock') {
+      // event.preventDefault();
+      localStorage.setItem('kbCaps', 'down');
+
+      shiftRendering();
+    } else if (event.code === 'ControlLeft') {
+      // event.preventDefault();
+    } else if (event.code === 'Backspace') {
+      event.preventDefault();
+      backspace();
+    } else if (event.code === 'AltLeft') {
+      // event.preventDefault();
+    } else if (event.code === 'ArrowLeft' || event.code === 'ArrowRight') {
+      event.preventDefault();
+      horizontalArrow(event.code);
+    } else if (event.code === 'ArrowUp' || event.code === 'ArrowDown') {
+      event.preventDefault();
+      verticalArrow(event.code);
+    } else {
+      // console.log(event);
+      printSymbol(event.code);
+    }
   }
 };
 const allKeyUp = (event) => {
   let pressedKey = document.querySelector(`.${event.code}`);
-  pressedKey.classList.remove('active');
-  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    localStorage.setItem('kbShift', 'up');
-    shiftRendering();
-    pressedKey = document.querySelector(`.${event.code}`);
+  if (pressedKey) {
     pressedKey.classList.remove('active');
-  } else if (event.code === 'CapsLock') {
-    localStorage.setItem('kbCaps', 'up');
+    if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+      localStorage.setItem('kbShift', 'up');
+      shiftRendering();
+      pressedKey = document.querySelector(`.${event.code}`);
+      pressedKey.classList.remove('active');
+    } else if (event.code === 'CapsLock') {
+      localStorage.setItem('kbCaps', 'up');
 
-    shiftRendering();
-  } else if ((event.code === 'AltLeft' && event.ctrlKey) || (event.code === 'ControlLeft' && event.altKey)) {
-    // event.preventDefault();
-    localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
-    shiftRendering();
-  } else if (event.code === 'ControlLeft') {
-    // event.preventDefault();
+      shiftRendering();
+    } else if ((event.code === 'AltLeft' && event.ctrlKey) || (event.code === 'ControlLeft' && event.altKey)) {
+      // event.preventDefault();
+      localStorage.setItem('kbLang', localStorage.getItem('kbLang') === 'en' ? 'ru' : 'en');
+      shiftRendering();
+    } else if (event.code === 'ControlLeft') {
+      // event.preventDefault();
+    }
   }
 };
 document.addEventListener('keydown', allKeyDown);
@@ -247,12 +252,14 @@ document.addEventListener('keyup', allKeyUp);
 window.addEventListener('click', (e) => {
   textarea.focus();
   if (e.target.closest('.key')) {
-    if (e.target.closest('.key').id === 'CapsLock' && localStorage.getItem('kbCaps') === 'up') {
-      allKeyDown({ code: 'CapsLock' });
-      // localStorage.setItem('kbCaps', 'down');
-    } else {
-      allKeyUp({ code: 'CapsLock' });
-      // localStorage.setItem('kbCaps', 'up');
+    if (e.target.closest('.key').id === 'CapsLock') {
+      if (localStorage.getItem('kbCaps') === 'up') {
+        allKeyDown({ code: 'CapsLock' });
+        localStorage.setItem('kbCaps', 'down');
+      } else {
+        allKeyUp({ code: 'CapsLock' });
+        localStorage.setItem('kbCaps', 'up');
+      }
     }
     if (e.target.closest('.key').id === 'ShiftLeft') {
       if (localStorage.getItem('kbShift') === 'up') {
@@ -301,6 +308,7 @@ window.addEventListener('click', (e) => {
       // console.log(e.target.closest('.key').id);
       horizontalArrow(e.target.closest('.key').id);
     }
+
     printSymbol(e.target.closest('.key').id);
     textarea.focus();
   }

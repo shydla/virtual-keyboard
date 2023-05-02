@@ -19,7 +19,7 @@ export default class Keyboard {
         i += 1;
       }
     }
-    if (kbShift === 'down') {
+    if (kbShift === 'down' && kbCaps !== 'down') {
       i += 1;
     }
     strKey.innerText = value[i];
