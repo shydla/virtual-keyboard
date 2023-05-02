@@ -168,7 +168,10 @@ const printSymbol = (element) => {
 
   const firstPart = valueArr.slice(0, textarea.selectionEnd);
   firstPart.push(value);
+  console.log(firstPart);
   const secondPart = valueArr.slice(textarea.selectionEnd);
+  console.log(firstPart.join('') + secondPart.join(''));
+  textarea.value = '';
   textarea.value = firstPart.join('') + secondPart.join('');
   textarea.selectionEnd = end + 1;
 };
@@ -194,7 +197,7 @@ const allKeyDown = (event) => {
 
   if (pressedKey) {
     pressedKey.classList.add('active');
-    // event.preventDefault();
+    event.preventDefault();
     if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
       // event.preventDefault();
       localStorage.setItem('kbShift', 'down');
