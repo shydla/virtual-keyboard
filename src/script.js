@@ -60,12 +60,16 @@ const backspace = () => {
   let start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   if (start === end) {
+    console.log(start);
     start -= 1;
   }
   const valueArr = textarea.value.split('');
   const firstPart = valueArr.slice(0, start);
   const secondPart = valueArr.slice(end);
+
   textarea.value = firstPart.join('') + secondPart.join('');
+  textarea.selectionStart = start;
+  textarea.selectionEnd = start;
 };
 const horizontalArrow = (direction) => {
   const start = textarea.selectionStart;
