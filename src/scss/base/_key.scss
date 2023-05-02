@@ -1,0 +1,61 @@
+.row {
+  margin: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+.key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 55px;
+  height: 55px;
+  text-align: center;
+  font-size: 2.5rem;
+  background-color: $color-key-spec;
+
+  //   padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  &:hover {
+    border-radius: 15px;
+  }
+}
+// .symbol {
+//     margin: auto;
+// }
+.active {
+  box-shadow: none;
+  color: azure;
+}
+.Space {
+  width: 450px;
+}
+
+.CapsLock {
+  padding-right: 50px;
+}
+.ShiftLeft {
+    padding-right: 50px;
+  }
+.ShiftRight {
+  padding-left: 50px;
+}
+.Backspace {
+    width: 130px;
+}
+.Tab {
+    width: 150px;
+}
+.Del {
+    width: 70px;
+}
+.Enter {
+    width: 100px;
+}
+.key-spec {
+    background-color: $color-key;
+}
+.unselectable {
+  user-select: none;
+}
